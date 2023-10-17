@@ -1,92 +1,95 @@
 <?php
 
-class Book
-{
-    private $isbn;
-    private $title;
-    private $author;
-    private $available;
+class Book{
+    private string $isbn;
+    private string $title;
+    private string $author;
+    private string $available;
 
-    public function __construct($isbn, $title, $author, $available)
-    {
+    // Constructor
+    public function __construct(string $isbn, string $title, string $author, int $available){
         $this->isbn = $isbn;
         $this->title = $title;
         $this->author = $author;
         $this->available = $available;
     }
 
-    public function getIsbn()
-    {
+    // Getter methods
+    public function getIsbn() : string {
         return $this->isbn;
     }
 
-    public function getTitle()
-    {
+    public function getTitle() : string {
         return $this->title;
     }
 
-    public function getAuthor()
-    {
+    public function getAuthor() : string {
         return $this->author;
     }
 
-    public function getAvailable()
-    {
+    public function getAvailable() : bool {
         return $this->available;
     }
 
-    public function setIsbn($isbn)
-    {
+    // Setter methods
+    public function setIsbn(string $isbn) : void {
         $this->isbn = $isbn;
     }
 
-    public function setTitle($title)
-    {
+    public function setTitle(string $title) : void {
         $this->title = $title;
     }
 
-    public function setAuthor($author)
-    {
+    public function setAuthor(string $author) : void {
         $this->author = $author;
     }
 
-    public function setAvailable($available)
-    {
+    public function setAvailable(bool $available) : void {
         $this->available = $available;
     }
 
-    public function getCopy()
-    {
-        return $this->available > 0;
-    }
-
-    public function addCopy($num)
-    {
-        if ($num > 0) {
-            $this->available += $num;
+    public function getCopy() : bool{
+        if($this->available > 0){
+            $this->available = $this->available - 1;
             return true;
         }
-        return false;
+        else return false;
     }
 
-    public function __toString()
-    {
-        return "ISBN: {$this->isbn}, Title: {$this->title}, Author: {$this->author}, Available: {$this->available}";
+    public function addCopy($num) : bool{
+        $this->available = $this->available + $num;
     }
 
-    public function __call($name, $arguments)
-    {
-        if (strpos($name, 'get') === 0) {
-            $property = lcfirst(substr($name, 3));
-            if (property_exists($this, $property)) {
-                return $this->$property;
-            }
-        } elseif (strpos($name, 'set') === 0) {
-            $property = lcfirst(substr($name, 3));
-            if (property_exists($this, $property)) {
-                $this->$property = $arguments[0];
-            }
+    // Implement the magic method: __toString()
+    public function __toString(){
+        $details= 
+        "</br>ISBN: ".$this->isbn."</br>".
+        "Title: ".$this->title."</br>".
+        "Author: ".$this->author."</br>".
+        "Available: ".$this->available;
+
+        return $details;
+    }
+
+    // Implement the magic method: __call()
+    public function __call($method, $value){
+        return "This method doesn't exits.";
+    }
+
+    // Implement the magic method: __get()
+    public function __get($var_name){
+        if(property_exists(__CLASS__, $var_name)){
+            return $this->{$var_name};
         }
+        return "\nSorry, this property doesn't exist.";
+    }
+
+    // Implement the magic method: __set()
+    public function __set($var_name, $value){
+        if(property_exists(__CLASS__, $var_name)){
+            $this->{$var_name} = $value;
+        }
+        return "\nSorry, this property doesn't exist.";
     }
 }
 
