@@ -1,78 +1,83 @@
 <?php
+class Customer{
 
-class Customer
-{
-    private $id;
-    private $firstName;
-    private $lastName;
-    private $email;
+    private int $id;
+    private string $firstName;
+    private string $lastName;
+    private string $email;
 
-    public function __construct($id, $firstName, $lastName, $email)
-    {
+    // Constructor
+    public function __construct(int $id, string $firstName, string $lastName, string $email){
         $this->id = $id;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
     }
 
-    public function getId()
-    {
+    //Getter methods
+    public function getId(){
         return $this->id;
     }
 
-    public function getFirstName()
-    {
+    public function getFirstName(){
         return $this->firstName;
     }
 
-    public function getLastName()
-    {
+    public function getLastName(){
         return $this->lastName;
     }
 
-    public function getEmail()
-    {
+    public function getEmail(){
         return $this->email;
     }
 
-    public function setId($id)
-    {
+    // Setter methods
+    public function setId($id){
         $this->id = $id;
     }
 
-    public function setFirstName($firstName)
-    {
+    public function setFirstName($firstName){
         $this->firstName = $firstName;
     }
 
-    public function setLastName($lastName)
-    {
+    public function setLastName($lastName){
         $this->lastName = $lastName;
     }
 
-    public function setEmail($email)
-    {
+    public function setEmail($email){
         $this->email = $email;
     }
 
-    public function __toString()
-    {
-        return "ID: {$this->id}, Name: {$this->firstName} {$this->lastName}, Email: {$this->email}";
+    // Implement the magic method: __toString()
+    public function __toString(){
+        $details=
+        "</br></br>ID: ".$this->id."</br>".
+        "First Name: ".$this->firstName."</br>".
+        "Last Name: ".$this->lastName."</br>".
+        "Email: ".$this->email;
+
+        return $details;
     }
 
-    public function __call($name, $arguments)
-    {
-        if (strpos($name, 'get') === 0) {
-            $property = lcfirst(substr($name, 3));
-            if (property_exists($this, $property)) {
-                return $this->$property;
-            }
-        } elseif (strpos($name, 'set') === 0) {
-            $property = lcfirst(substr($name, 3));
-            if (property_exists($this, $property)) {
-                $this->$property = $arguments[0];
-            }
+    // Implement the magic method: __call()
+    public function __call($method, $value){
+        return "This method doesn't exits.";
+    }
+
+    // Implement the magic method: __get()
+    public function __get($var_name){
+        if(property_exists(__CLASS__, $var_name)){
+            return $this->{$var_name};
         }
+        return "\nSorry, this property doesn't exist.";
+    }
+
+    // Implement the magic method: __set()
+    public function __set($var_name, $value){
+        if(property_exists(__CLASS__, $var_name)){
+            $this->{$var_name} = $value;
+        }
+        return "\nSorry, this property doesn't exist.";
     }
 }
 
